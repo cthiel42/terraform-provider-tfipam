@@ -1,0 +1,1 @@
+terraform import pool.example pool_example:10.0.0.0/24,10.5.0.0/24
