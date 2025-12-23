@@ -122,7 +122,8 @@ func (p *IpamProvider) EphemeralResources(ctx context.Context) []func() ephemera
 
 func (p *IpamProvider) DataSources(ctx context.Context) []func() datasource.DataSource {
 	return []func() datasource.DataSource{
-		NewExampleDataSource,
+		NewPoolDataSource,
+		NewAllocationDataSource,
 	}
 }
 

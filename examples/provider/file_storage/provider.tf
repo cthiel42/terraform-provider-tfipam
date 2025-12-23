@@ -7,8 +7,8 @@ terraform {
 }
 
 provider "ipam" {
-    storage_type = "file"
-    file_path    = "ipam_storage_example.json"
+  storage_type = "file"
+  file_path    = "ipam_storage_example.json"
 }
 
 resource "ipam_pool" "example" {
