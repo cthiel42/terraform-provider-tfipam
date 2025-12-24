@@ -6,5 +6,5 @@ partition: tf-ecosystem
 summary:
   owner: cthiel42
   description: |
-    IP Address Management (IPAM) provider for Terraform.
+    IP Address Management (IPAM) as a Terraform provider
   visibility: public

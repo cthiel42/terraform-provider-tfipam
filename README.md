@@ -2,10 +2,40 @@
 
 This repository contains the source code for the tf-ipam provider, a Terraform provider for IP Address Management.
 
-- `examples/` contains helpful examples to get you started
-- `internal/` contains the source source for the provider
+Quick example
+```hcl
+provider "ipam" {
+  storage_type = "file"
+  file_path    = ".terraform/ipam-storage.json"
+}
+
+resource "ipam_pool" "example" {
+  name = "pool_example"
+  cidrs = [
+    "10.0.0.0/16",
+    "10.5.0.0/24"
+  ]
+}
+
+resource "ipam_allocation" "example_0" {
+  id            = "allocation_example_0"
+  pool_name     = ipam_pool.example.name
+  prefix_length = 24
+}
+
+resource "ipam_allocation" "example_1" {
+  id            = "allocation_example_1"
+  pool_name     = ipam_pool.example.name
+  prefix_length = 27
+}
+```
 
 This provider requires a backend for IPAM information to be stored. While I sought out to store everything in Terraform's state, I found limitations within Terraform that prevented this from being a reality with parent-child resources like this provider implements. As a result, having a backend to store this information was a necessity. I have made an attempt to have a few commonly used backends built in. If there's other backends that would be useful, please open a GitHub issue with your suggestions. I also welcome PR's.
+
+
+- `examples/` contains helpful examples to get you started
+- `internal/` contains the source source for the provider
+- `docs/` contains the markdown files used on the Terraform registry
 
 ## Requirements
 
@@ -36,9 +66,6 @@ go mod tidy
 
 Then commit the changes to `go.mod` and `go.sum`.
 
-## Using the provider
-
-TODO: Fill this in for each provider
 
 ## Developing the Provider
 
