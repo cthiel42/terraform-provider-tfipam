@@ -1,4 +1,4 @@
-## 1.0.0
+## v1.0.0
 
 FEATURES:
 - Resources for IPAM Pool and Allocation created
