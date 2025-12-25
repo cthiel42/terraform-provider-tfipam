@@ -5,7 +5,7 @@ import (
 	"flag"
 	"log"
 
-	"terraform-provider-tf-ipam/internal/provider"
+	"terraform-provider-tfipam/internal/provider"
 
 	"github.com/hashicorp/terraform-plugin-framework/providerserver"
 )
@@ -23,7 +23,7 @@ func main() {
 	flag.Parse()
 
 	opts := providerserver.ServeOpts{
-		Address: "registry.terraform.io/cthiel42/tf-ipam",
+		Address: "registry.terraform.io/cthiel42/tfipam",
 		Debug:   debug,
 	}
 

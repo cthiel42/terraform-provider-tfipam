@@ -1,3 +1,3 @@
-data "ipam_pool" "example" {
+data "tfipam_pool" "example" {
   name = "pool_example"
 }

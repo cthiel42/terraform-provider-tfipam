@@ -1,4 +1,4 @@
-module terraform-provider-tf-ipam
+module terraform-provider-tfipam
 
 go 1.24.0
 

@@ -1,3 +1,13 @@
+## v1.0.3
+
+FEATURES:
+
+UPDATES:
+- Documentation updates
+- Naming change to tfipam standardized across repo
+
+BUGS:
+
 ## v1.0.2
 
 FEATURES:

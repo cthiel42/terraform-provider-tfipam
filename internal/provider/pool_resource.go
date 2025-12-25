@@ -14,7 +14,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/types"
 	"github.com/hashicorp/terraform-plugin-log/tflog"
 
-	"terraform-provider-tf-ipam/internal/provider/storage"
+	"terraform-provider-tfipam/internal/provider/storage"
 )
 
 var _ resource.Resource = &PoolResource{}

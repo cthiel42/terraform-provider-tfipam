@@ -5,9 +5,9 @@ description: |-
   IPAM provider for managing IP address pools and allocations with Terraform
 ---
 
-# IPAM Provider
+# TFIPAM Provider
 
-A lightweight Terraform provider for managing IP address pools and allocations. The IPAM Provider lets you declare and manage IP pools, allocate and release addresses through Terraform, and persist configurations to a storage backend (default: file). It is intended for simple IPAM workflows and automation in local or small-scale environments.
+A lightweight Terraform provider for managing IP address pools and allocations. The TFIPAM provider lets you declare and manage IP pools, allocate and release addresses through Terraform, and persist configurations to a storage backend (default: file). It is intended for simple IPAM workflows and automation in local or small-scale environments.
 
 Features
 - Create, update, and delete IP pools and prefixes
@@ -19,19 +19,19 @@ Quick example
 ```hcl
 terraform {
   required_providers {
-    tf-ipam = {
-      source = "cthiel42/tf-ipam"
-      version = "1.0.2"
+    tfipam = {
+      source = "cthiel42/tfipam"
+      version = "1.0.3"
     }
   }
 }
 
-provider "tf-ipam" {
+provider "tfipam" {
   storage_type = "file"
   file_path    = ".terraform/ipam-storage.json"
 }
 
-resource "ipam_pool" "example" {
+resource "tfipam_pool" "example" {
   name = "pool_example"
   cidrs = [
     "10.0.0.0/16",
@@ -39,15 +39,15 @@ resource "ipam_pool" "example" {
   ]
 }
 
-resource "ipam_allocation" "example_0" {
+resource "tfipam_allocation" "example_0" {
   id            = "allocation_example_0"
-  pool_name     = ipam_pool.example.name
+  pool_name     = tfipam_pool.example.name
   prefix_length = 24
 }
 
-resource "ipam_allocation" "example_1" {
+resource "tfipam_allocation" "example_1" {
   id            = "allocation_example_1"
-  pool_name     = ipam_pool.example.name
+  pool_name     = tfipam_pool.example.name
   prefix_length = 27
 }
 ```
@@ -56,7 +56,7 @@ Allocation resources provision CIDRs from the pool based on a greedy search and 
 
 Data Call Example
 ```hcl
-data "ipam_allocation" "example" {
+data "tfipam_allocation" "example" {
   id        = "allocation_example_0"
   pool_name = "pool_example"
 }

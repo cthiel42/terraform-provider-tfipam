@@ -14,7 +14,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/types"
 	"github.com/hashicorp/terraform-plugin-log/tflog"
 
-	"terraform-provider-tf-ipam/internal/provider/storage"
+	"terraform-provider-tfipam/internal/provider/storage"
 )
 
 var _ provider.Provider = &IpamProvider{}
@@ -39,7 +39,7 @@ type IpamProviderModel struct {
 }
 
 func (p *IpamProvider) Metadata(ctx context.Context, req provider.MetadataRequest, resp *provider.MetadataResponse) {
-	resp.TypeName = "ipam"
+	resp.TypeName = "tfipam"
 	resp.Version = p.version
 }
 

@@ -1,15 +1,15 @@
 terraform {
   required_providers {
-    ipam = {
-      source = "cthiel42/tf-ipam"
-      version = "1.0.2"
+    tfipam = {
+      source = "cthiel42/tfipam"
+      version = "1.0.3"
     }
   }
 }
 
-provider "ipam" {}
+provider "tfipam" {}
 
-resource "ipam_pool" "example" {
+resource "tfipam_pool" "example" {
   name = "pool_example"
   cidrs = [
     "10.0.0.0/24",

@@ -3,7 +3,7 @@ package provider
 import (
 	"context"
 	"fmt"
-	"terraform-provider-tf-ipam/internal/provider/storage"
+	"terraform-provider-tfipam/internal/provider/storage"
 
 	"github.com/hashicorp/terraform-plugin-framework/datasource"
 	"github.com/hashicorp/terraform-plugin-framework/datasource/schema"
