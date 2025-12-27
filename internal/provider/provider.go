@@ -34,8 +34,17 @@ type IpamProvider struct {
 
 // provider data model.
 type IpamProviderModel struct {
-	StorageType types.String `tfsdk:"storage_type"`
-	FilePath    types.String `tfsdk:"file_path"`
+	StorageType           types.String `tfsdk:"storage_type"`
+	FilePath              types.String `tfsdk:"file_path"`
+	AzureConnectionString types.String `tfsdk:"azure_connection_string"`
+	AzureContainerName    types.String `tfsdk:"azure_container_name"`
+	AzureBlobName         types.String `tfsdk:"azure_blob_name"`
+	S3Region              types.String `tfsdk:"s3_region"`
+	S3BucketName          types.String `tfsdk:"s3_bucket_name"`
+	S3ObjectKey           types.String `tfsdk:"s3_object_key"`
+	S3AccessKeyID         types.String `tfsdk:"s3_access_key_id"`
+	S3SecretAccessKey     types.String `tfsdk:"s3_secret_access_key"`
+	S3SessionToken        types.String `tfsdk:"s3_session_token"`
 }
 
 func (p *IpamProvider) Metadata(ctx context.Context, req provider.MetadataRequest, resp *provider.MetadataResponse) {
@@ -49,11 +58,51 @@ func (p *IpamProvider) Schema(ctx context.Context, req provider.SchemaRequest, r
 		Attributes: map[string]schema.Attribute{
 			"storage_type": schema.StringAttribute{
 				Optional:            true,
-				MarkdownDescription: "Storage backend type. Supported values: 'file' (default)",
+				MarkdownDescription: "Storage backend type. Supported values: 'file' (default), 'azure_blob' (Azure Blob Storage), 'aws_s3' (AWS S3)",
 			},
 			"file_path": schema.StringAttribute{
 				Optional:            true,
-				MarkdownDescription: "Path to storage file for 'file' storage backend. Defaults to '.terraform/ipam-storage.json'",
+				MarkdownDescription: "Path to storage file for 'file' storage backend. Required for 'file' backend. Defaults to '.terraform/ipam-storage.json'",
+			},
+			"azure_connection_string": schema.StringAttribute{
+				Optional:            true,
+				Sensitive:           true,
+				MarkdownDescription: "Connection string for Azure Blob Storage. Required for 'azure_blob' backend.",
+			},
+			"azure_container_name": schema.StringAttribute{
+				Optional:            true,
+				MarkdownDescription: "Container name for Azure Blob Storage. Required for 'azure_blob' backend.",
+			},
+			"azure_blob_name": schema.StringAttribute{
+				Optional:            true,
+				MarkdownDescription: "Blob name for Azure Blob Storage. Defaults to 'ipam-storage.json'",
+			},
+			"s3_region": schema.StringAttribute{
+				Optional:            true,
+				MarkdownDescription: "AWS region for S3 bucket. Required for 'aws_s3' backend.",
+			},
+			"s3_bucket_name": schema.StringAttribute{
+				Optional:            true,
+				MarkdownDescription: "S3 bucket name. Required for 'aws_s3' backend.",
+			},
+			"s3_object_key": schema.StringAttribute{
+				Optional:            true,
+				MarkdownDescription: "S3 object key (file path). Defaults to 'ipam-storage.json'",
+			},
+			"s3_access_key_id": schema.StringAttribute{
+				Optional:            true,
+				Sensitive:           true,
+				MarkdownDescription: "AWS Access Key ID. Optional - uses default AWS credential chain if not provided.",
+			},
+			"s3_secret_access_key": schema.StringAttribute{
+				Optional:            true,
+				Sensitive:           true,
+				MarkdownDescription: "AWS Secret Access Key. Required if s3_access_key_id is provided.",
+			},
+			"s3_session_token": schema.StringAttribute{
+				Optional:            true,
+				Sensitive:           true,
+				MarkdownDescription: "AWS Session Token. Optional - for temporary credentials.",
 			},
 		},
 	}
@@ -74,14 +123,44 @@ func (p *IpamProvider) Configure(ctx context.Context, req provider.ConfigureRequ
 			storageType = data.StorageType.ValueString()
 		}
 
-		filePath := ""
-		if !data.FilePath.IsNull() && !data.FilePath.IsUnknown() {
-			filePath = data.FilePath.ValueString()
+		storageConfig := &storage.Config{
+			Type: storageType,
 		}
 
-		storageConfig := &storage.Config{
-			Type:     storageType,
-			FilePath: filePath,
+		// File backend config
+		if !data.FilePath.IsNull() && !data.FilePath.IsUnknown() {
+			storageConfig.FilePath = data.FilePath.ValueString()
+		}
+
+		// Azure backend config
+		if !data.AzureConnectionString.IsNull() && !data.AzureConnectionString.IsUnknown() {
+			storageConfig.AzureConnectionString = data.AzureConnectionString.ValueString()
+		}
+		if !data.AzureContainerName.IsNull() && !data.AzureContainerName.IsUnknown() {
+			storageConfig.AzureContainerName = data.AzureContainerName.ValueString()
+		}
+		if !data.AzureBlobName.IsNull() && !data.AzureBlobName.IsUnknown() {
+			storageConfig.AzureBlobName = data.AzureBlobName.ValueString()
+		}
+
+		// S3 backend config
+		if !data.S3Region.IsNull() && !data.S3Region.IsUnknown() {
+			storageConfig.S3Region = data.S3Region.ValueString()
+		}
+		if !data.S3BucketName.IsNull() && !data.S3BucketName.IsUnknown() {
+			storageConfig.S3BucketName = data.S3BucketName.ValueString()
+		}
+		if !data.S3ObjectKey.IsNull() && !data.S3ObjectKey.IsUnknown() {
+			storageConfig.S3ObjectKey = data.S3ObjectKey.ValueString()
+		}
+		if !data.S3AccessKeyID.IsNull() && !data.S3AccessKeyID.IsUnknown() {
+			storageConfig.S3AccessKeyID = data.S3AccessKeyID.ValueString()
+		}
+		if !data.S3SecretAccessKey.IsNull() && !data.S3SecretAccessKey.IsUnknown() {
+			storageConfig.S3SecretAccessKey = data.S3SecretAccessKey.ValueString()
+		}
+		if !data.S3SessionToken.IsNull() && !data.S3SessionToken.IsUnknown() {
+			storageConfig.S3SessionToken = data.S3SessionToken.ValueString()
 		}
 
 		var err error
@@ -95,8 +174,7 @@ func (p *IpamProvider) Configure(ctx context.Context, req provider.ConfigureRequ
 		}
 
 		tflog.Debug(ctx, "Storage backend initialized", map[string]any{
-			"type":      storageConfig.Type,
-			"file_path": storageConfig.FilePath,
+			"type": storageConfig.Type,
 		})
 	}
 

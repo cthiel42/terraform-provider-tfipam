@@ -2,7 +2,7 @@ terraform {
   required_providers {
     tfipam = {
       source  = "cthiel42/tfipam"
-      version = "1.0.3"
+      version = "1.1.0"
     }
   }
 }
