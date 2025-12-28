@@ -190,7 +190,7 @@ func TestAccAllocationResource_PrefixLargerThanPool(t *testing.T) {
 		ProtoV6ProviderFactories: testAccProtoV6ProviderFactories,
 		Steps: []resource.TestStep{
 			{
-				Config: testAccAllocationResourceConfigSmallPool("small-pool", "too-large", 16),
+				Config:      testAccAllocationResourceConfigSmallPool("small-pool", "too-large", 16),
 				ExpectError: regexp.MustCompile("no available CIDR blocks|Allocation Failed"),
 			},
 		},
@@ -428,7 +428,7 @@ func TestAccAllocationResource_SequentialAllocations(t *testing.T) {
 	})
 }
 
-// testAccAllocationResourceConfig generates a Terraform configuration for an allocation resource
+// testAccAllocationResourceConfig generates a Terraform configuration for an allocation resource.
 func testAccAllocationResourceConfig(poolName, allocID string, prefixLength int) string {
 	return fmt.Sprintf(`
 resource "tfipam_pool" "test" {
@@ -444,7 +444,7 @@ resource "tfipam_allocation" "test" {
 `, poolName, allocID, prefixLength)
 }
 
-// testAccAllocationResourceConfigNoPool generates config without creating the pool first
+// testAccAllocationResourceConfigNoPool generates config without creating the pool first.
 func testAccAllocationResourceConfigNoPool(poolName, allocID string, prefixLength int) string {
 	return fmt.Sprintf(`
 resource "tfipam_allocation" "test" {
@@ -455,7 +455,7 @@ resource "tfipam_allocation" "test" {
 `, allocID, poolName, prefixLength)
 }
 
-// testAccAllocationResourceConfigMultiple generates config with multiple allocations
+// testAccAllocationResourceConfigMultiple generates config with multiple allocations.
 func testAccAllocationResourceConfigMultiple(poolName string, prefixLength int) string {
 	return fmt.Sprintf(`
 resource "tfipam_pool" "test" {
@@ -483,7 +483,7 @@ resource "tfipam_allocation" "test3" {
 `, poolName, prefixLength)
 }
 
-// testAccAllocationResourceConfigDifferentPrefixes generates config with different prefix lengths
+// testAccAllocationResourceConfigDifferentPrefixes generates config with different prefix lengths.
 func testAccAllocationResourceConfigDifferentPrefixes(poolName string) string {
 	return fmt.Sprintf(`
 resource "tfipam_pool" "test" {
@@ -517,7 +517,7 @@ resource "tfipam_allocation" "test_32" {
 `, poolName)
 }
 
-// testAccAllocationResourceConfigSmallPool generates config with a small pool
+// testAccAllocationResourceConfigSmallPool generates config with a small pool.
 func testAccAllocationResourceConfigSmallPool(poolName, allocID string, prefixLength int) string {
 	return fmt.Sprintf(`
 resource "tfipam_pool" "test" {
@@ -533,7 +533,7 @@ resource "tfipam_allocation" "test" {
 `, poolName, allocID, prefixLength)
 }
 
-// testAccAllocationResourceConfigTwoPools generates config with two pools
+// testAccAllocationResourceConfigTwoPools generates config with two pools.
 func testAccAllocationResourceConfigTwoPools(pool1, pool2, allocID string, prefixLength int, usePool string) string {
 	return fmt.Sprintf(`
 resource "tfipam_pool" "pool1" {
@@ -552,15 +552,15 @@ resource "tfipam_allocation" "test" {
   prefix_length = %[4]d
 }
 `, pool1, pool2, allocID, prefixLength,
-	func() string {
-		if usePool == pool1 {
-			return "tfipam_pool.pool1.name"
-		}
-		return "tfipam_pool.pool2.name"
-	}())
+		func() string {
+			if usePool == pool1 {
+				return "tfipam_pool.pool1.name"
+			}
+			return "tfipam_pool.pool2.name"
+		}())
 }
 
-// testAccAllocationResourceConfigIPv6 generates config for IPv6 allocation
+// testAccAllocationResourceConfigIPv6 generates config for IPv6 allocation.
 func testAccAllocationResourceConfigIPv6(poolName, allocID string, prefixLength int) string {
 	return fmt.Sprintf(`
 resource "tfipam_pool" "test" {
@@ -576,7 +576,7 @@ resource "tfipam_allocation" "test" {
 `, poolName, allocID, prefixLength)
 }
 
-// testAccAllocationResourceConfigIPv6Multiple generates config for multiple IPv6 allocations
+// testAccAllocationResourceConfigIPv6Multiple generates config for multiple IPv6 allocations.
 func testAccAllocationResourceConfigIPv6Multiple(poolName string) string {
 	return fmt.Sprintf(`
 resource "tfipam_pool" "test" {
@@ -604,7 +604,7 @@ resource "tfipam_allocation" "test_64" {
 `, poolName)
 }
 
-// testAccAllocationResourceConfigSequential generates config with sequential allocations
+// testAccAllocationResourceConfigSequential generates config with sequential allocations.
 func testAccAllocationResourceConfigSequential(poolName string, count int, prefixLength int) string {
 	config := fmt.Sprintf(`
 resource "tfipam_pool" "test" {

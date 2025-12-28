@@ -244,7 +244,7 @@ func TestAccPoolDataSource_MultipleDataSources(t *testing.T) {
 	})
 }
 
-// testAccPoolDataSourceConfig generates a Terraform configuration with a pool resource and data source
+// testAccPoolDataSourceConfig generates a Terraform configuration with a pool resource and data source.
 func testAccPoolDataSourceConfig(name string, cidrs []string) string {
 	cidrsConfig := ""
 	for _, cidr := range cidrs {
@@ -264,7 +264,7 @@ data "tfipam_pool" "test" {
 `, name, cidrsConfig)
 }
 
-// testAccPoolDataSourceConfigNotFound generates a config that tries to read a non-existent pool
+// testAccPoolDataSourceConfigNotFound generates a config that tries to read a non-existent pool.
 func testAccPoolDataSourceConfigNotFound(name string) string {
 	return fmt.Sprintf(`
 data "tfipam_pool" "test" {
@@ -273,7 +273,7 @@ data "tfipam_pool" "test" {
 `, name)
 }
 
-// testAccPoolDataSourceConfigWithAllocations generates a config with pool, allocations, and data source
+// testAccPoolDataSourceConfigWithAllocations generates a config with pool, allocations, and data source.
 func testAccPoolDataSourceConfigWithAllocations(name string, cidrs []string) string {
 	cidrsConfig := ""
 	for _, cidr := range cidrs {
@@ -305,7 +305,7 @@ data "tfipam_pool" "test" {
 `, name, cidrsConfig)
 }
 
-// testAccPoolDataSourceConfigMultiple generates a config with multiple pools and data sources
+// testAccPoolDataSourceConfigMultiple generates a config with multiple pools and data sources.
 func testAccPoolDataSourceConfigMultiple() string {
 	return `
 resource "tfipam_pool" "pool1" {

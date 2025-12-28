@@ -29,7 +29,7 @@ type blobData struct {
 // NewAzureBlobStorage creates a new Azure Blob Storage backend
 // connectionString: Azure Storage connection string
 // containerName: Name of the blob container
-// blobName: Name of the blob file (e.g. "ipam-storage.json")
+// blobName: Name of the blob file (e.g. "ipam-storage.json").
 func NewAzureBlobStorage(connectionString, containerName, blobName string) (*AzureBlobStorage, error) {
 	if connectionString == "" {
 		return nil, errors.New("azure connection string is required")

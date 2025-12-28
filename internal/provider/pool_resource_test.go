@@ -363,7 +363,7 @@ func TestAccPoolResource_MixedIPv4IPv6(t *testing.T) {
 	})
 }
 
-// testAccPoolResourceConfig generates a Terraform configuration for a pool resource
+// testAccPoolResourceConfig generates a Terraform configuration for a pool resource.
 func testAccPoolResourceConfig(name string, cidrs []string) string {
 	cidrsConfig := ""
 	for _, cidr := range cidrs {
@@ -379,8 +379,7 @@ resource "tfipam_pool" "test" {
 `, name, cidrsConfig)
 }
 
-// testAccPoolResourceConfigWithAllocation generates a Terraform configuration
-// for a pool resource with an allocation
+// testAccPoolResourceConfigWithAllocation generates a Terraform configuration for a pool resource with an allocation.
 func testAccPoolResourceConfigWithAllocation(name string, cidrs []string) string {
 	cidrsConfig := ""
 	for _, cidr := range cidrs {

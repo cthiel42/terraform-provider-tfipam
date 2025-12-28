@@ -34,7 +34,7 @@ type s3Data struct {
 // objectKey: S3 object key (path to the JSON file, e.g. "ipam-storage.json")
 // accessKeyID: AWS Access Key ID (optional, uses default credential chain if empty)
 // secretAccessKey: AWS Secret Access Key (optional, required if accessKeyID is provided)
-// sessionToken: AWS Session Token (optional, for temporary credentials)
+// sessionToken: AWS Session Token (optional, for temporary credentials).
 func NewS3Storage(region, bucketName, objectKey, accessKeyID, secretAccessKey, sessionToken string) (*S3Storage, error) {
 	if region == "" {
 		return nil, errors.New("aws region is required")
