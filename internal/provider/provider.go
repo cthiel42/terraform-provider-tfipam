@@ -45,6 +45,7 @@ type IpamProviderModel struct {
 	S3AccessKeyID         types.String `tfsdk:"s3_access_key_id"`
 	S3SecretAccessKey     types.String `tfsdk:"s3_secret_access_key"`
 	S3SessionToken        types.String `tfsdk:"s3_session_token"`
+	S3EndpointURL         types.String `tfsdk:"s3_endpoint_url"`
 }
 
 func (p *IpamProvider) Metadata(ctx context.Context, req provider.MetadataRequest, resp *provider.MetadataResponse) {
@@ -104,6 +105,10 @@ func (p *IpamProvider) Schema(ctx context.Context, req provider.SchemaRequest, r
 				Sensitive:           true,
 				MarkdownDescription: "AWS Session Token. Optional - for temporary credentials.",
 			},
+			"s3_endpoint_url": schema.StringAttribute{
+				Optional:            true,
+				MarkdownDescription: "Custom S3 endpoint URL. Optional - for S3 compatible services like MinIO or LocalStack.",
+			},
 		},
 	}
 }
@@ -161,6 +166,9 @@ func (p *IpamProvider) Configure(ctx context.Context, req provider.ConfigureRequ
 		}
 		if !data.S3SessionToken.IsNull() && !data.S3SessionToken.IsUnknown() {
 			storageConfig.S3SessionToken = data.S3SessionToken.ValueString()
+		}
+		if !data.S3EndpointURL.IsNull() && !data.S3EndpointURL.IsUnknown() {
+			storageConfig.S3EndpointURL = data.S3EndpointURL.ValueString()
 		}
 
 		var err error

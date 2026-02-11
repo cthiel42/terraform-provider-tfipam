@@ -83,7 +83,8 @@ provider "tfipam" {
   s3_object_key        = "ipam-storage.json" # Optional: defaults to "ipam-storage.json"
   s3_access_key_id     = "AKIAABCDEFGHEXAMPLE"
   s3_secret_access_key = "ACCESSKEYEXAMPLE1234567890"
-  # s3_session_token    = "token"              # Optional: for temporary credentials
+  s3_endpoint_url      = "https://s3.example.com" # Optional: for S3 compatible services like MinIO or LocalStack
+  # s3_session_token    = "token"                 # Optional: for temporary credentials
 }
 ```
 

@@ -34,8 +34,9 @@ type s3Data struct {
 // objectKey: S3 object key (path to the JSON file, e.g. "ipam-storage.json")
 // accessKeyID: AWS Access Key ID (optional, uses default credential chain if empty)
 // secretAccessKey: AWS Secret Access Key (optional, required if accessKeyID is provided)
-// sessionToken: AWS Session Token (optional, for temporary credentials).
-func NewS3Storage(region, bucketName, objectKey, accessKeyID, secretAccessKey, sessionToken string) (*S3Storage, error) {
+// sessionToken: AWS Session Token (optional, for temporary credentials)
+// endpointURL: Custom S3 endpoint URL (optional, for S3 compatible services like MinIO or LocalStack).
+func NewS3Storage(region, bucketName, objectKey, accessKeyID, secretAccessKey, sessionToken, endpointURL string) (*S3Storage, error) {
 	if region == "" {
 		return nil, errors.New("aws region is required")
 	}
@@ -78,7 +79,15 @@ func NewS3Storage(region, bucketName, objectKey, accessKeyID, secretAccessKey, s
 		return nil, fmt.Errorf("failed to load aws config: %w", err)
 	}
 
-	client := s3.NewFromConfig(cfg)
+	// create s3 client with custom endpoint if provided
+	var client *s3.Client
+	if endpointURL != "" {
+		client = s3.NewFromConfig(cfg, func(o *s3.Options) {
+			o.BaseEndpoint = aws.String(endpointURL)
+		})
+	} else {
+		client = s3.NewFromConfig(cfg)
+	}
 
 	s3s := &S3Storage{
 		client:     client,
