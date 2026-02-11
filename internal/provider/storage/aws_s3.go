@@ -38,7 +38,7 @@ type s3Data struct {
 // secretAccessKey: AWS Secret Access Key (optional, required if accessKeyID is provided)
 // sessionToken: AWS Session Token (optional, for temporary credentials)
 // endpointURL: Custom S3 endpoint URL (optional, for S3 compatible services like MinIO or LocalStack)
-// skipTLSVerify: Skip TLS certificate verification (optional)
+// skipTLSVerify: Skip TLS certificate verification (optional).
 func NewS3Storage(region, bucketName, objectKey, accessKeyID, secretAccessKey, sessionToken, endpointURL string, skipTLSVerify bool) (*S3Storage, error) {
 	if region == "" {
 		return nil, errors.New("aws region is required")
