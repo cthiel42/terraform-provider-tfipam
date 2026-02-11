@@ -84,6 +84,7 @@ func NewS3Storage(region, bucketName, objectKey, accessKeyID, secretAccessKey, s
 	if endpointURL != "" {
 		client = s3.NewFromConfig(cfg, func(o *s3.Options) {
 			o.BaseEndpoint = aws.String(endpointURL)
+			o.UsePathStyle = true // uses path style addressing where the bucket name is part of the url path, not subdomain. required for most s3 compatible services
 		})
 	} else {
 		client = s3.NewFromConfig(cfg)

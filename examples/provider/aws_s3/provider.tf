@@ -2,7 +2,7 @@ terraform {
   required_providers {
     tfipam = {
       source  = "cthiel42/tfipam"
-      version = "1.1.0"
+      version = "1.2.0"
     }
   }
 }
@@ -15,7 +15,8 @@ provider "tfipam" {
   s3_object_key        = "ipam-storage.json" # Optional: defaults to "ipam-storage.json"
   s3_access_key_id     = "AKIAABCDEFGHEXAMPLE"
   s3_secret_access_key = "ACCESSKEYEXAMPLE1234567890"
-  # s3_session_token    = "token"              # Optional: for temporary credentials
+  s3_endpoint_url      = "https://s3.example.com" # Optional: for S3 compatible services like MinIO or LocalStack
+  # s3_session_token    = "token"                 # Optional: for temporary credentials
 }
 
 # Example 2: Using default AWS credential chain (IAM role, env vars, ~/.aws/credentials)
