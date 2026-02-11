@@ -21,7 +21,7 @@ terraform {
   required_providers {
     tfipam = {
       source = "cthiel42/tfipam"
-      version = "1.1.0"
+      version = "1.2.0"
     }
   }
 }
@@ -88,7 +88,9 @@ provider "tfipam" {
   s3_object_key        = "ipam-storage.json" # Optional: defaults to "ipam-storage.json"
   s3_access_key_id     = "AKIAABCDEFGHEXAMPLE"
   s3_secret_access_key = "ACCESSKEYEXAMPLE1234567890"
-  # s3_session_token    = "token"              # Optional: for temporary credentials
+  s3_endpoint_url      = "https://s3.example.com" # Optional: for S3-compatible services like MinIO or LocalStack
+  # s3_session_token    = "token"                 # Optional: for temporary credentials
+  # s3_skip_tls_verify  = true                    # Optional: skip TLS verification for self signed certs on S3 compatible services
 }
 ```
 
@@ -127,5 +129,7 @@ provider "tfipam" {
 - `s3_bucket_name` (String) S3 bucket name. Required for 'aws_s3' backend.
 - `s3_object_key` (String) S3 object key (file path). Defaults to 'ipam-storage.json'
 - `s3_access_key_id` (String) AWS Access Key ID used by 'aws_s3' storage method. Optional - uses default AWS credential chain if not provided.
+- `s3_endpoint_url` (String) Custom S3 endpoint URL. Optional - for S3 compatible services like MinIO or LocalStack.
 - `s3_secret_access_key` (String) AWS Secret Access Key. Required if s3_access_key_id is provided.
 - `s3_session_token` (String) AWS Session Token. Optional - for temporary credentials.
+- `s3_skip_tls_verify` (Boolean) Skip TLS verification for self signed certs on S3 compatible services. Optional, defaults to false.
