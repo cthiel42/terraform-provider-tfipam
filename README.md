@@ -85,6 +85,7 @@ provider "tfipam" {
   s3_secret_access_key = "ACCESSKEYEXAMPLE1234567890"
   s3_endpoint_url      = "https://s3.example.com" # Optional: for S3 compatible services like MinIO or LocalStack
   # s3_session_token    = "token"                 # Optional: for temporary credentials
+  # s3_skip_tls_verify  = true                    # Optional: skip TLS verification for self signed certs on S3 compatible services
 }
 ```
 

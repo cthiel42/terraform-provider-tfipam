@@ -3,10 +3,12 @@ package storage
 import (
 	"bytes"
 	"context"
+	"crypto/tls"
 	"encoding/json"
 	"errors"
 	"fmt"
 	"io"
+	"net/http"
 	"sync"
 
 	"github.com/aws/aws-sdk-go-v2/aws"
@@ -35,8 +37,9 @@ type s3Data struct {
 // accessKeyID: AWS Access Key ID (optional, uses default credential chain if empty)
 // secretAccessKey: AWS Secret Access Key (optional, required if accessKeyID is provided)
 // sessionToken: AWS Session Token (optional, for temporary credentials)
-// endpointURL: Custom S3 endpoint URL (optional, for S3 compatible services like MinIO or LocalStack).
-func NewS3Storage(region, bucketName, objectKey, accessKeyID, secretAccessKey, sessionToken, endpointURL string) (*S3Storage, error) {
+// endpointURL: Custom S3 endpoint URL (optional, for S3 compatible services like MinIO or LocalStack)
+// skipTLSVerify: Skip TLS certificate verification (optional)
+func NewS3Storage(region, bucketName, objectKey, accessKeyID, secretAccessKey, sessionToken, endpointURL string, skipTLSVerify bool) (*S3Storage, error) {
 	if region == "" {
 		return nil, errors.New("aws region is required")
 	}
@@ -85,6 +88,17 @@ func NewS3Storage(region, bucketName, objectKey, accessKeyID, secretAccessKey, s
 		client = s3.NewFromConfig(cfg, func(o *s3.Options) {
 			o.BaseEndpoint = aws.String(endpointURL)
 			o.UsePathStyle = true // uses path style addressing where the bucket name is part of the url path, not subdomain. required for most s3 compatible services
+
+			// Skip TLS verification
+			if skipTLSVerify {
+				o.HTTPClient = &http.Client{
+					Transport: &http.Transport{
+						TLSClientConfig: &tls.Config{
+							InsecureSkipVerify: true,
+						},
+					},
+				}
+			}
 		})
 	} else {
 		client = s3.NewFromConfig(cfg)

@@ -46,6 +46,7 @@ type IpamProviderModel struct {
 	S3SecretAccessKey     types.String `tfsdk:"s3_secret_access_key"`
 	S3SessionToken        types.String `tfsdk:"s3_session_token"`
 	S3EndpointURL         types.String `tfsdk:"s3_endpoint_url"`
+	S3SkipTLSVerify       types.Bool   `tfsdk:"s3_skip_tls_verify"`
 }
 
 func (p *IpamProvider) Metadata(ctx context.Context, req provider.MetadataRequest, resp *provider.MetadataResponse) {
@@ -109,6 +110,10 @@ func (p *IpamProvider) Schema(ctx context.Context, req provider.SchemaRequest, r
 				Optional:            true,
 				MarkdownDescription: "Custom S3 endpoint URL. Optional - for S3 compatible services like MinIO or LocalStack.",
 			},
+			"s3_skip_tls_verify": schema.BoolAttribute{
+				Optional:            true,
+				MarkdownDescription: "Skip TLS certificate verification. Optional - can be useful with self signed certificates on S3 compatible services",
+			},
 		},
 	}
 }
@@ -169,6 +174,9 @@ func (p *IpamProvider) Configure(ctx context.Context, req provider.ConfigureRequ
 		}
 		if !data.S3EndpointURL.IsNull() && !data.S3EndpointURL.IsUnknown() {
 			storageConfig.S3EndpointURL = data.S3EndpointURL.ValueString()
+		}
+		if !data.S3SkipTLSVerify.IsNull() && !data.S3SkipTLSVerify.IsUnknown() {
+			storageConfig.S3SkipTLSVerify = data.S3SkipTLSVerify.ValueBool()
 		}
 
 		var err error

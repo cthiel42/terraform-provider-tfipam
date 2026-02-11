@@ -57,6 +57,7 @@ type Config struct {
 	S3SecretAccessKey string // Optional: required if S3AccessKeyID is provided
 	S3SessionToken    string // Optional: for temporary credentials
 	S3EndpointURL     string // Optional: for S3 compatible services like MinIO or LocalStack
+	S3SkipTLSVerify   bool   // Optional: skip TLS certificate verification
 }
 
 func Factory(ctx context.Context, config *Config) (Storage, error) {
@@ -67,7 +68,7 @@ func Factory(ctx context.Context, config *Config) (Storage, error) {
 		return NewAzureBlobStorage(config.AzureConnectionString, config.AzureContainerName, config.AzureBlobName)
 	case "aws_s3":
 		return NewS3Storage(config.S3Region, config.S3BucketName, config.S3ObjectKey,
-			config.S3AccessKeyID, config.S3SecretAccessKey, config.S3SessionToken, config.S3EndpointURL)
+			config.S3AccessKeyID, config.S3SecretAccessKey, config.S3SessionToken, config.S3EndpointURL, config.S3SkipTLSVerify)
 	default:
 		return nil, errors.New("unknown storage type")
 	}
